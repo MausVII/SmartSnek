@@ -29,8 +29,13 @@ class Game:
         self.snake = Snake(self.win_width / 2, self.win_height / 2, INITIAL_SIZE, BLOCK_SIZE, self.display)
         self.food = Food(self.display, COLORS["food"], BLOCK_SIZE, self.win_width, self.win_height)
 
+        self.reward = 0
+        self.step = 0
+
     def game_loop(self):
         while self.isGameRunning:
+            if self.step > 100 * len(self.snake.segments):
+                self.isGameRunning = False
             # Keep track of snake eating
             hasEaten = False
 
@@ -44,9 +49,12 @@ class Game:
 
             self.clock.tick(HUMAN_SPEED)
 
+            self.step += 1
+
         pygame.quit()
 
     def reset(self):
+        self.reward = -10
         self.snake.reset(self.win_width / 2, self.win_height / 2, INITIAL_SIZE)
 
     def do_collision_logic(self):
@@ -69,8 +77,8 @@ class Game:
         if self.snake.is_colliding_with(self.food.get_coor()):
             self.food.spawn()
             if self.snake.is_colliding_with(self.food.get_coor()):
-                print("True")
                 self.food.spawn()
+                self.reward = 10
             return True
         return False
 
@@ -100,5 +108,6 @@ class Game:
                     elif event.key == pygame.K_DOWN:
                         self.snake.move(Direction.DOWN)
 
-game = Game()
-game.game_loop()
+if __name__ == '__main__':
+    game = Game()
+    game.game_loop()

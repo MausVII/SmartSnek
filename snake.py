@@ -15,15 +15,13 @@ class Snake:
         self.init_body()
 
     def init_body(self):
-        for i in range(0, self.n_segments):
-            new_seg = Point(self.head.x - (i * self.block_size), self.head.y)
-            self.segments.append(new_seg)
+        self.segments = [Point(self.head.x - idx * self.block_size, self.head.y) for idx, seg in enumerate(range(self.n_segments))]
 
     def draw(self):
         for segment in self.segments:
             pygame.draw.rect(self.display, COLORS["snake"], pygame.Rect(segment.x, segment.y, self.block_size, self.block_size))
 
-    def update(self, hasEaten):
+    def update(self, has_eaten):
         x = self.head.x
         y = self.head.y
 
@@ -40,7 +38,7 @@ class Snake:
 
         self.segments.insert(0, Point(self.head.x, self.head.y))
         # Keep the last segment if it has eaten, cut it otherwise
-        if not hasEaten:
+        if not has_eaten:
             self.segments.pop()
         else:
             self.n_segments += 1
