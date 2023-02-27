@@ -40,10 +40,11 @@ class Game:
         self.step = 0
     
     def play_step(self, action):
-        # food_arr = np.array([self.food.coor.x, self.food.coor.y])
-        # snake_arr = np.array([self.snake.head.x, self.snake.head.y], dtype=int)
-        # distance_food_bef = np.linalg.norm(food_arr - snake_arr)
+        food_arr = np.array([self.food.coor.x, self.food.coor.y])
+        snake_arr = np.array([self.snake.head.x, self.snake.head.y], dtype=int)
+        distance_food_bef = np.linalg.norm(food_arr - snake_arr)
 
+        self.reward = 0
         self.step += 1
         for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -64,11 +65,11 @@ class Game:
         self.update(hasEaten)
         self.clock.tick(AI_SPEED)
 
-        # food_arr = np.array([self.food.coor.x, self.food.coor.y])
-        # distance_food_aft = np.linalg.norm(food_arr - snake_arr)
+        food_arr = np.array([self.food.coor.x, self.food.coor.y])
+        distance_food_aft = np.linalg.norm(food_arr - snake_arr)
 
-        # if distance_food_aft < distance_food_bef:
-        #     self.reward = 1
+        if distance_food_aft < distance_food_bef:
+            self.reward = 1
 
         return self.reward, False, self.score
 
@@ -185,6 +186,7 @@ class Game:
         text = [
             font.render(F'Score: {self.score}', True, COLORS['text']), 
             font.render(F'Record: {self.record}', True, COLORS['text']),
+            font.render(F'Reward: {self.reward}', True, COLORS['text']),
             ]
         text_rect = text[0].get_rect()
         text_rect.center = TEXT_CENTER_COOR
